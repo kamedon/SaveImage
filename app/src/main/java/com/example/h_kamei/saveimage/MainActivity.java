@@ -1,19 +1,13 @@
 package com.example.h_kamei.saveimage;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.example.h_kamei.saveimage.util.CreateBitmap;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -23,19 +17,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Bitmap sampleImage = BitmapFactory.decodeResource(getResources(), R.drawable.sample);
-        Bitmap bitmap = Bitmap.createBitmap(sampleImage.getWidth(), sampleImage.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(sampleImage, 0, 0, new Paint());
-
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-        String dateText = sdf1.format(new Date());
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextSize(50);
-        textPaint.setColor(Color.WHITE);
-        canvas.drawText(dateText, bitmap.getWidth() / 10, bitmap.getHeight()*95 / 100, textPaint);
+        Bitmap bitmap = CreateBitmap.createDebugData(getResources(), R.drawable.sample);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
         imageView.setImageBitmap(bitmap);
