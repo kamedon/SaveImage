@@ -6,14 +6,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Environment;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by h_kamei on 2015/01/29.
  */
-public class CreateBitmap {
+public class BitmapUtil {
 
     public static Bitmap createDebugData(Resources resources, int resourceId) {
         Bitmap sampleImage = BitmapFactory.decodeResource(resources, resourceId);
@@ -30,4 +35,35 @@ public class CreateBitmap {
         canvas.drawText(dateText, bitmap.getWidth() / 20, bitmap.getHeight() * 19 / 20, textPaint);
         return bitmap;
     }
+
+    public static File save(Bitmap bitmap) throws IOException {
+        try {
+            String dirPath = Environment.getExternalStorageDirectory().toString() + "/test/";
+            File dir = new File(dirPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            // 日付でファイル名を作成　
+            Date mDate = new Date();
+            SimpleDateFormat fileName = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+            // 保存処理開始
+            FileOutputStream fos = null;
+            File file = new File(dir, fileName.format(mDate) + ".jpg");
+            fos = new FileOutputStream(file);
+
+            // jpegで保存
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+            // 保存処理終了
+            fos.close();
+            return file;
+        } catch (Exception e) {
+            Log.e("Error", "" + e.toString());
+            throw e;
+        }
+
+    }
+
 }

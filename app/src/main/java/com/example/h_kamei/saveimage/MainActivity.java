@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.example.h_kamei.saveimage.util.CreateBitmap;
+import com.example.h_kamei.saveimage.util.BitmapUtil;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -17,7 +17,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bitmap bitmap = CreateBitmap.createDebugData(getResources(), R.drawable.sample);
+        Bitmap bitmap = BitmapUtil.createDebugData(getResources(), R.drawable.sample);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
         imageView.setImageBitmap(bitmap);
