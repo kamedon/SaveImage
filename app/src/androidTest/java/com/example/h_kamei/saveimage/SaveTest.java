@@ -15,6 +15,7 @@ import java.io.IOException;
  */
 public class SaveTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
+    private final int count = 100;
     private Activity mActivity;
 
     public SaveTest() {
@@ -41,45 +42,104 @@ public class SaveTest extends ActivityInstrumentationTestCase2<MainActivity> {
         bitmap.recycle();
     }
 
-    //デバック画像の保存
-    public void testSendBroadcast() {
-//        createSaveTestCase(1, "SendBroadcast", new OnSaveListener() {
-//            @Override
-//            public void onSave(File file) {
-//                BitmapUtil.sendBroadcast(mActivity, file);
-//            }
-//        });
+    public void testContentResolver() {
+        createSaveTestCase(count, "ContentResolver", new OnSaveListener() {
+            @Override
+            public void onPre() {
+            }
 
-        createSaveTestCase(1, "ContentResolver", new OnSaveListener() {
             @Override
             public void onSave(File file) {
+                Log.v("kkk", "+++++ContentResolver" + file.getPath());
                 BitmapUtil.contentResolver(mActivity.getContentResolver(), file);
             }
+
+            @Override
+            public void onFail(Exception e) {
+            }
+
+            @Override
+            public void onFinally() {
+            }
         });
-//
-//        createSaveTestCase(1, "MediaScannerConnection", new OnSaveListener() {
-//            @Override
-//            public void onSave(File file) {
-//                BitmapUtil.mediaScannerConnection(mActivity, file);
-//            }
-//        });
+
     }
 
+    public void testMediaScannerConnection() {
+        createSaveTestCase(count, "MediaScannerConnection", new OnSaveListener() {
+            @Override
+            public void onPre() {
+
+            }
+
+            @Override
+            public void onSave(File file) {
+                Log.v("kkk", "----MediaScannerConnection" + file.getPath());
+                BitmapUtil.mediaScannerConnection(mActivity, file);
+            }
+
+            @Override
+            public void onFail(Exception e) {
+
+            }
+
+            @Override
+            public void onFinally() {
+
+            }
+        });
+
+    }
+    //デバック画像の保存
+//    public void testSendBroadcast() {
+//        createSaveTestCase(1, "SendBroadcast", new OnSaveListener() {
+//            @Override
+//            public void onPre() {
+//
+//            }
+//
+//            @Override
+//            public void onSave(File file) {
+//                Log.v("kkk","----sendBroadcast"+file.getPath());
+//                BitmapUtil.sendBroadcast(mActivity, file);
+//            }
+//
+//            @Override
+//            public void onFail(Exception e) {
+//
+//            }
+//
+//            @Override
+//            public void onFinally() {
+//
+//            }
+//        });
+//    }
+
     public interface OnSaveListener {
+        public void onPre();
+
         public void onSave(File file);
+
+        public void onFail(Exception e);
+
+        public void onFinally();
     }
 
     public void createSaveTestCase(int count, String text, OnSaveListener listener) {
         for (int i = 0; i < count; i++) {
-            Bitmap bitmap = BitmapUtil.createDebugData(mActivity.getResources(), R.drawable.sample, text);
+            listener.onPre();
+            Bitmap bitmap = BitmapUtil.createDebugData(mActivity.getResources(), R.drawable.sample, text + "[" + (i + 1) + "]");
             try {
                 File file = BitmapUtil.save(bitmap);
                 listener.onSave(file);
             } catch (IOException e) {
                 e.printStackTrace();
+                listener.onFail(e);
                 fail();
             } finally {
                 bitmap.recycle();
+                listener.onFinally();
             }
         }
     }

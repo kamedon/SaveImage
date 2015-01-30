@@ -44,7 +44,7 @@ public class BitmapUtil {
         String dateText = sdf1.format(new Date());
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(55);
         textPaint.setColor(Color.WHITE);
 
         canvas.drawText(text, bitmap.getWidth() / 20, bitmap.getHeight()  / 2, textPaint);
@@ -63,7 +63,7 @@ public class BitmapUtil {
 
             // 日付でファイル名を作成　
             Date mDate = new Date();
-            SimpleDateFormat fileName = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            SimpleDateFormat fileName = new SimpleDateFormat("MMdd_HHmmss_SSS");
 
             // 保存処理開始
             FileOutputStream fos = null;
