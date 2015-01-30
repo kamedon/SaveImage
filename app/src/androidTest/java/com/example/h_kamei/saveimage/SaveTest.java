@@ -41,16 +41,48 @@ public class SaveTest extends ActivityInstrumentationTestCase2<MainActivity> {
         bitmap.recycle();
     }
 
-    //デバック画像の作成
-    public void testSaveBitmap() {
-        Bitmap bitmap = BitmapUtil.createDebugData(mActivity.getResources(), R.drawable.sample);
-        try {
-            File file = BitmapUtil.save(bitmap);
-            assertTrue(file.exists());
-            Log.e("testSaveBitmap", file.getPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
+    //デバック画像の保存
+    public void testSendBroadcast() {
+//        createSaveTestCase(1, "SendBroadcast", new OnSaveListener() {
+//            @Override
+//            public void onSave(File file) {
+//                BitmapUtil.sendBroadcast(mActivity, file);
+//            }
+//        });
+
+        createSaveTestCase(1, "ContentResolver", new OnSaveListener() {
+            @Override
+            public void onSave(File file) {
+                BitmapUtil.contentResolver(mActivity.getContentResolver(), file);
+            }
+        });
+//
+//        createSaveTestCase(1, "MediaScannerConnection", new OnSaveListener() {
+//            @Override
+//            public void onSave(File file) {
+//                BitmapUtil.mediaScannerConnection(mActivity, file);
+//            }
+//        });
+    }
+
+    public interface OnSaveListener {
+        public void onSave(File file);
+    }
+
+    public void createSaveTestCase(int count, String text, OnSaveListener listener) {
+        for (int i = 0; i < count; i++) {
+            Bitmap bitmap = BitmapUtil.createDebugData(mActivity.getResources(), R.drawable.sample, text);
+            try {
+                File file = BitmapUtil.save(bitmap);
+                listener.onSave(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                fail();
+            } finally {
+                bitmap.recycle();
+            }
         }
     }
+
+
 }
